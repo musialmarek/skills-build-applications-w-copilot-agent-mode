@@ -1,14 +1,22 @@
+
 from django.contrib import admin
 from django.urls import path, include
-import os
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-codespace_name = os.environ.get('CODESPACE_NAME')
-if codespace_name:
-    base_url = f"https://{codespace_name}-8000.app.github.dev"
-else:
-    base_url = "http://localhost:8000"
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'teams': request.build_absolute_uri('api/teams/'),
+        'users': request.build_absolute_uri('api/users/'),
+        'activities': request.build_absolute_uri('api/activities/'),
+        'workouts': request.build_absolute_uri('api/workouts/'),
+        'leaderboard': request.build_absolute_uri('api/leaderboard/'),
+    })
 
 urlpatterns = [
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
-    path('api/', include('rest_framework.urls')),  # placeholder for api
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('octofit_tracker.api_urls')),
 ]
