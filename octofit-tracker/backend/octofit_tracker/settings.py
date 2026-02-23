@@ -11,7 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-change-me'
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+import os
+codespace_name = os.environ.get('CODESPACE_NAME')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if codespace_name:
+    ALLOWED_HOSTS.append(f"{codespace_name}-8000.app.github.dev")
 
 # Application definition
 
